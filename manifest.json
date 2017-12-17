@@ -1,7 +1,7 @@
 {
     "applications": {
         "gecko": {
-            "id": "skipredirect@sblask",
+            "id": "skipredirect@hyperfekt",
             "strict_min_version": "46.0"
         }
     },
@@ -23,7 +23,7 @@
         "default_title": "__MSG_browserActionLabelDefault__"
     },
     "description": "__MSG_extensionDescription__",
-    "homepage_url": "https://github.com/sblask/webextension-skip-redirect",
+    "homepage_url": "https://github.com/hyperfekt/webextension-skip-redirect",
     "icons": {
         "128": "icon-128x128.png",
         "16": "icon-16x16.png",
@@ -38,9 +38,6 @@
     },
     "permissions": [
         "<all_urls>",
-        "clipboardWrite",
-        "contextMenus",
-        "notifications",
         "storage",
         "webRequest",
         "webRequestBlocking"

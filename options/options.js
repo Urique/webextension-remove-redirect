@@ -3,16 +3,12 @@ function restoreOptions() {
         "mode",
         "blacklist",
         "whitelist",
-        "notificationPopupEnabled",
-        "notificationDuration",
         "skipRedirectsToSameDomain",
     ]).then(
         result => {
             setTextValue("blacklist", result.blacklist.join("\n"));
             setTextValue("whitelist", result.whitelist.join("\n"));
             setBooleanValue("mode" + result.mode.charAt(0).toUpperCase() + result.mode.slice(1), true);
-            setBooleanValue("notificationPopupEnabled", result.notificationPopupEnabled);
-            setTextValue("notificationDuration", result.notificationDuration);
             setBooleanValue("skipRedirectsToSameDomain", result.skipRedirectsToSameDomain);
         }
     );
@@ -60,8 +56,6 @@ function saveOptions(event) {
               document.querySelector("#modeBlacklist").checked && "blacklist"
               ||
               document.querySelector("#modeWhitelist").checked && "whitelist",
-        notificationPopupEnabled: document.querySelector("#notificationPopupEnabled").checked,
-        notificationDuration: document.querySelector("#notificationDuration").value,
         skipRedirectsToSameDomain: document.querySelector("#skipRedirectsToSameDomain").checked,
     });
 }

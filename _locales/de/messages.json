@@ -11,24 +11,6 @@
         "description": "Label of the button when the extension is enabled.",
         "message": "Skip Redirect ist an. Ein Klick öffnet die Einstellungen um es auszustellen"
     },
-    "browserActionLabelOnSkipped": {
-        "description": "Label of the button when the extension is enabled and there was a redirect.",
-        "message": "Skip Redirect ist an\n\nDie letzte Weiterleitung war:\n\n$sourceUrl$\n➔\n$targetUrl$",
-        "placeholders": {
-            "sourceUrl": {
-                "content": "$1",
-                "example": "https://example.com/out?url=https%3A%2F%2Fmozilla.org"
-            },
-            "targetUrl": {
-                "content": "$2",
-                "example": "https://mozilla.org"
-            }
-        }
-    },
-    "contextMenuLabel": {
-        "description": "Label of the context menu entry to copy last URL.",
-        "message": "Letzte übersprungene Webadresse kopieren"
-    },
     "extensionDescription": {
         "description": "Description of the extension in the add-on manager.",
         "message": "Manche Webseiten leiten Benutzer auf eine extra Seite bevor sie auf die Seite weiterleiten die man eigentlich sehen wollte. Skip Redirect versucht diese Weiterleitung zu überspringen um direkt zur richtigen Seite zu gehen."
@@ -53,21 +35,9 @@
         "description": "The choice that sets the extension into whitelist mode.",
         "message": "Überspringe Weiterleitungen nur für Webadressen die einem Eintrag in der Whitelist entsprechen."
     },
-    "optionsNotificationsDuration": {
-        "description": "Label of the input field to specify how long notifications are shown.",
-        "message": "Zeige Benachrichtigungen für so viele Sekunden (zwischen 1 und 10):"
-    },
-    "optionsNotificationsEnable": {
-        "description": "Label of the checkbox to toggle notifications.",
-        "message": "Zeige Benachrichtigungsdialog"
-    },
     "optionsSectionMode": {
         "description": "Title of the options section allowing to toggle between blacklist and whitelist or disable the extension.",
         "message": "Modus"
-    },
-    "optionsSectionNotifications": {
-        "description": "Title of the options section allowing to control notifications.",
-        "message": "Benachrichtigungen"
     },
     "optionsSkipRedirectsToSameDomain": {
         "description": "Label of the checkbox that toggles skipping to the same public domain.",
@@ -80,27 +50,5 @@
     "optionsWhitelistContent": {
         "description": "Label of the text area to edit the whitelist.",
         "message": "Whitelist (jeder Eintrag muss diesem <a href=\"https://developer.mozilla.org/Add-ons/WebExtensions/Match_patterns\">Schema</a> folgen)"
-    },
-    "redirectSkippedBrowserActionBadge": {
-        "description": "Text of the badge shown on the button after a redirect was skipped.",
-        "message": "Skip"
-    },
-    "redirectSkippedNotificationMessage": {
-        "description": "Content of the notification about skipped redirect.",
-        "message": "$sourceUrl$\n➔\n$targetUrl$",
-        "placeholders": {
-            "sourceUrl": {
-                "content": "$1",
-                "example": "https://example.com/out?url=https%3A%2F%2Fmozilla.org"
-            },
-            "targetUrl": {
-                "content": "$2",
-                "example": "https://mozilla.org"
-            }
-        }
-    },
-    "redirectSkippedNotificationTitle": {
-        "description": "Title of the notification about skipped redirect.",
-        "message": "Eine Weiterleitung wurde übersprungen"
     }
 }

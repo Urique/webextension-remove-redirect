@@ -1,5 +1,5 @@
 {
-    "author": "Sebastian Blask",
+    "author": "hyperfekt",
     "devDependencies": {
         "eslint": "4.11.x",
         "tape": "4.6.x",
@@ -11,7 +11,7 @@
     "preferences-branch": "skipredirect",
     "repository": {
         "type": "git",
-        "url": "https://github.com/sblask/webextension-skip-redirect"
+        "url": "https://github.com/hyperfekt/webextension-skip-redirect"
     },
     "scripts": {
         "artifact-create:chrome": "web-ext build --artifacts-dir . --ignore-files bin screenshots package.json icon.fodg *.dat",
