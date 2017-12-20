@@ -104,20 +104,14 @@ function forEachNode(nodelist, func) {
 function cachedRedirectWithRuleset(mode, exceptionlist, samedomain) {
     let redirectCache = new Map();
     let concreteRedirect = redirectWithRuleset(mode, exceptionlist, samedomain, redirectCache);
-    return immediateRedirect(concreteRedirect, redirectCache);
+    return cachedRedirect(concreteRedirect, redirectCache);
 
     function redirectWithRuleset(mode, exceptionlist, samedomain) {
         let exceptionRegex = new RegExp("(" + exceptionlist.join("|") + ")", "i");
-        function appliedRedirect(url) {
-            return redirect(url, mode, exceptionRegex, samedomain);
-        }
-        return appliedRedirect;
+        return (url) => redirect(url, mode, exceptionRegex, samedomain);
     }
-    function immediateRedirect(redirect, cache) {
-        function cachedRedirect(url) {
-            return getConvergingCached(url, redirect, cache);
-        }
-        return cachedRedirect;
+    function cachedRedirect(redirect, cache) {
+        return (url) => getConvergingCached(url, redirect, cache);
     }
 }
 
@@ -129,16 +123,15 @@ function manipulateDocument(doc, trackedevents, linkManipulator) {
     trackedevents.forEach((e) => doc.addEventListener(e, eventListenerFromElementManipulator(elementManipulator)));
 
     function anchorManipulatorFromLinkManipulator(linkManipulator) {
-        function appliedAnchorManipulator(anchor) {
+        return function(anchor) {
             let target = linkManipulator(anchor.href);
             if (target) {
                 anchor.href = target;
             }
-        }
-        return appliedAnchorManipulator;
+        };
     }
     function mutationObserverWithHandler(handler) {
-        let observer = new MutationObserver(function (mutations) {
+        return new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
                 if (mutation.type == "childList") {
                     forEachNode(mutation.addedNodes, handler)
@@ -147,13 +140,9 @@ function manipulateDocument(doc, trackedevents, linkManipulator) {
                 }
             })
         });
-        return observer;
     }
     function ifAnchorWithManipulator(func) {
-        function appliedIfAnchor(element) {
-            return ifAnchor(element, func);
-        }
-        return appliedIfAnchor;
+        return (element) => ifAnchor(element, func);
     }
     function ifAnchor(element, func) {
         if (element.tagName === "A") {
@@ -161,10 +150,7 @@ function manipulateDocument(doc, trackedevents, linkManipulator) {
         }
     }
     function eventListenerFromElementManipulator(func) {
-        function appliedEventListener(event) {
-            return func(event.target);
-        }
-        return appliedEventListener;
+        return (event) => func(event.target);
     }
     function startObserver(doc, observer) {
         observer.observe(doc, {
