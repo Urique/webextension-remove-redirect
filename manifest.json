@@ -1,18 +1,27 @@
 {
     "applications": {
         "gecko": {
-            "id": "skipredirect@hyperfekt",
+            "id": "removeredirect@hyperfekt",
             "strict_min_version": "46.0"
         }
     },
-    "author": "Sebastian Blask",
+    "author": "hyperfekt",
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "removeredirect.js",
+                "base64.js",
+                "pslrules.js",
+                "psl.js",
+                "url.js",
+                "browser-polyfill.js"
+            ]
+        }
+    ],
     "background": {
         "scripts": [
             "browser-polyfill.js",
-            "base64.js",
-            "pslrules.js",
-            "psl.js",
-            "url.js",
             "background.js"
         ]
     },
@@ -23,7 +32,7 @@
         "default_title": "__MSG_browserActionLabelDefault__"
     },
     "description": "__MSG_extensionDescription__",
-    "homepage_url": "https://github.com/hyperfekt/webextension-skip-redirect",
+    "homepage_url": "https://github.com/hyperfekt/webextension-remove-redirect",
     "icons": {
         "128": "icon-128x128.png",
         "16": "icon-16x16.png",
@@ -38,9 +47,7 @@
     },
     "permissions": [
         "<all_urls>",
-        "storage",
-        "webRequest",
-        "webRequestBlocking"
+        "storage"
     ],
     "default_locale": "en",
     "version": "2.2.1"

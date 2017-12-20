@@ -3,13 +3,13 @@ function restoreOptions() {
         "mode",
         "blacklist",
         "whitelist",
-        "skipRedirectsToSameDomain",
+        "removeRedirectsToSameDomain",
     ]).then(
         result => {
             setTextValue("blacklist", result.blacklist.join("\n"));
             setTextValue("whitelist", result.whitelist.join("\n"));
             setBooleanValue("mode" + result.mode.charAt(0).toUpperCase() + result.mode.slice(1), true);
-            setBooleanValue("skipRedirectsToSameDomain", result.skipRedirectsToSameDomain);
+            setBooleanValue("removeRedirectsToSameDomain", result.removeRedirectsToSameDomain);
         }
     );
 }
@@ -56,7 +56,7 @@ function saveOptions(event) {
               document.querySelector("#modeBlacklist").checked && "blacklist"
               ||
               document.querySelector("#modeWhitelist").checked && "whitelist",
-        skipRedirectsToSameDomain: document.querySelector("#skipRedirectsToSameDomain").checked,
+        removeRedirectsToSameDomain: document.querySelector("#removeRedirectsToSameDomain").checked,
     });
 }
 

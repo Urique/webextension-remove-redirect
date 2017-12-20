@@ -57,7 +57,8 @@ const url = (function(root) { //  eslint-disable-line no-unused-vars
 
     // #$&+,/:;=?@
     const symbolRegExp = new RegExp("(%23|%24|%26|%2B|%2C|%2F|%3A|%3B|%3D|%3F|%40)", "i");
-
+    
+    
     function maybeDecode(urlMatch) {
         if (percentRegExp.test(urlMatch)) {
             urlMatch = decodeURIComponent(urlMatch);
@@ -98,23 +99,16 @@ const url = (function(root) { //  eslint-disable-line no-unused-vars
         }
     }
 
-    function getRedirectTarget(url, exceptions) {
-        if (exceptions.length > 0 && new RegExp("(" + exceptions.join("|") + ")", "i").test(url)) {
-            return url;
-        }
-
-        const extractedUrl = getPlainMatches(url) || getBase64Matches(url);
-        if (extractedUrl) {
-            return getRedirectTarget(maybeDecode(extractedUrl), exceptions);
-        }
-
-        return url;
+    function extractUrl(url) {
+        return getPlainMatches(url) || getBase64Matches(url) || false;
     }
 
-    root.getRedirectTarget = getRedirectTarget;
+    root.extractUrl = extractUrl;
+    root.maybeDecode = maybeDecode;
 
     return {
-        getRedirectTarget: getRedirectTarget,
+        extractUrl: extractUrl,
+        maybeDecode: maybeDecode
     };
 
 })(this);

@@ -1,27 +1,27 @@
 {
     "browserActionLabelDefault": {
         "description": "Label of the button before the extension has loaded completely.",
-        "message": "Skip Redirect"
+        "message": "Remove Redirect lädt..."
     },
     "browserActionLabelOff": {
         "description": "Label of the button when the extension is disabled.",
-        "message": "Skip Redirect ist aus. Ein Klick öffnet die Einstellungen um es anzustellen"
+        "message": "Remove Redirect ist aus. Ein Klick öffnet die Einstellungen um es anzustellen"
     },
     "browserActionLabelOn": {
         "description": "Label of the button when the extension is enabled.",
-        "message": "Skip Redirect ist an. Ein Klick öffnet die Einstellungen um es auszustellen"
+        "message": "Remove Redirect ist an. Ein Klick öffnet die Einstellungen um es auszustellen"
     },
     "extensionDescription": {
         "description": "Description of the extension in the add-on manager.",
-        "message": "Manche Webseiten leiten Benutzer auf eine extra Seite bevor sie auf die Seite weiterleiten die man eigentlich sehen wollte. Skip Redirect versucht diese Weiterleitung zu überspringen um direkt zur richtigen Seite zu gehen."
+        "message": "Manche Webseiten leiten Benutzer auf eine extra Seite bevor sie auf die Seite weiterleiten die man eigentlich sehen wollte. Remove Redirect versucht diese Weiterleitung zu überspringen um direkt zur richtigen Seite zu gehen."
     },
     "extensionName": {
         "description": "Name of the extension in the add-on manager.",
-        "message": "Skip Redirect"
+        "message": "Remove Redirect"
     },
     "optionsBlacklistContent": {
         "description": "Label of the text area to edit the blacklist.",
-        "message": "Blacklist (reguläre Ausdrücke sind zugelassen)"
+        "message": "Blacklist (reguläre Ausdrücke sind notwendig)"
     },
     "optionsModeBlacklist": {
         "description": "The choice that sets the extension into blacklist mode.",
@@ -39,8 +39,8 @@
         "description": "Title of the options section allowing to toggle between blacklist and whitelist or disable the extension.",
         "message": "Modus"
     },
-    "optionsSkipRedirectsToSameDomain": {
-        "description": "Label of the checkbox that toggles skipping to the same public domain.",
+    "optionsRemoveRedirectsToSameDomain": {
+        "description": "Label of the checkbox that toggles Removeping to the same public domain.",
         "message": "Überspringe Weiterleitungen für Webadressen mit der selben öffentlichen Domäne"
     },
     "optionsTitle": {
@@ -49,6 +49,6 @@
     },
     "optionsWhitelistContent": {
         "description": "Label of the text area to edit the whitelist.",
-        "message": "Whitelist (jeder Eintrag muss diesem <a href=\"https://developer.mozilla.org/Add-ons/WebExtensions/Match_patterns\">Schema</a> folgen)"
+        "message": "Whitelist (reguläre Ausdrücke sind notwendig)"
     }
 }

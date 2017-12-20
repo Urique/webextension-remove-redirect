@@ -7,11 +7,11 @@
         "web-ext": "2.2.x"
     },
     "license": "MIT",
-    "name": "skipredirect",
-    "preferences-branch": "skipredirect",
+    "name": "removeredirect",
+    "preferences-branch": "removeredirect",
     "repository": {
         "type": "git",
-        "url": "https://github.com/hyperfekt/webextension-skip-redirect"
+        "url": "https://github.com/hyperfekt/webextension-remove-redirect"
     },
     "scripts": {
         "artifact-create:chrome": "web-ext build --artifacts-dir . --ignore-files bin screenshots package.json icon.fodg *.dat",
@@ -34,6 +34,6 @@
         "test": "web-ext lint && tape $(find . -not -path '*node_modules*' -name 'test-*.js') && npm run translation-check",
         "translation-check": "./bin/translation-check"
     },
-    "title": "Skip Redirect",
+    "title": "Remove Redirect",
     "version": "2.2.1"
 }
