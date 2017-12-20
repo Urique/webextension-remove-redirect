@@ -3,78 +3,78 @@
 const MODE = "mode";
 const BLACKLIST = "blacklist";
 const WHITELIST = "whitelist";
+const REMOVE_REDIRECTS_TO_SAME_DOMAIN = "removeRedirectsToSameDomain";
 
 const MODE_OFF = "off";
 const MODE_BLACKLIST = "blacklist";
-const REMOVE_REDIRECTS_TO_SAME_DOMAIN = "removeRedirectsToSameDomain";
 
 const TRACKEDEVENTS = ["focusin", "mouseover", "mousedown", "click"];
 
-let currentMode = undefined;
-let removeRedirectsToSameDomain = undefined;
-let ExceptionRegex = undefined;
-let cachedRedirects = new Map();
+const debuggingDelay = false; //false or milliseconds
 
-
-browser.storage.local.get([
-    MODE,
-    BLACKLIST,
-    WHITELIST,
-    REMOVE_REDIRECTS_TO_SAME_DOMAIN,
-])
-    .then(
-    (result) => {
-        currentMode = result[MODE];
-        if (currentMode !== MODE_OFF) {
-            removeRedirectsToSameDomain = result[REMOVE_REDIRECTS_TO_SAME_DOMAIN];
-            if (currentMode === MODE_BLACKLIST) {
-                setExceptions(result[BLACKLIST]);
-            } else {
-                setExceptions(result[WHITELIST]);
-            }
-            enableRemoving();
-        }
-    }
-    );
-
-function setExceptions(list) {
-    ExceptionRegex = new RegExp("(" + list.join("|") + ")", "i");
+if (debuggingDelay) {
+    setTimeout(initialize, debuggingDelay);
+} else {
+    initialize();
 }
 
-function maybeRedirect(address) {
-    let target = getTarget(address);
-    cachedRedirects[target] = false;
-    return allowed(address) && differentdomains(address, target) && target;
+function initialize(){
+    browser.storage.local.get([
+        MODE,
+        BLACKLIST,
+        WHITELIST,
+        REMOVE_REDIRECTS_TO_SAME_DOMAIN,
+    ]).then(
+        (result) => {
+            if (result[MODE] !== MODE_OFF) {
+                let exceptions = undefined;
+                if (result[MODE] === MODE_BLACKLIST) {
+                    exceptions = result[BLACKLIST];
+                } else {
+                    exceptions = result[WHITELIST];
+                }
+                manipulateDocument(document, TRACKEDEVENTS, cachedRedirectWithRuleset(result[MODE], exceptions, result[REMOVE_REDIRECTS_TO_SAME_DOMAIN]))
+            }
+        }
+    );
+}
 
 
-    function allowed(a) {
-        let excepted = ExceptionRegex.test(address);
-        if (currentMode === MODE_BLACKLIST) {
+function redirect(address, mode, exceptionRegex, samedomain, cache) {
+    let target = getTarget(address, mode, exceptionRegex, samedomain);
+    if (cache) {
+        cache[target] = false;
+    }
+    return allowed(address, mode, exceptionRegex) && differentdomains(address, target, mode, samedomain) && target;
+
+    function allowed(url, mode, exceptionRegex) {
+        let excepted = exceptionRegex.test(address);
+        if (mode === MODE_BLACKLIST) {
             return !excepted;
         } else {
             return excepted;
         }
     }
-    function getTarget(a) {
-        let target = url.extractUrl(a);
+    function getTarget(address, mode, exceptionRegex, samedomain) {
+        let target = url.extractUrl(address);
         if (target) {
             target = url.maybeDecode(target);
-            target = maybeRedirect(target) || target;
-            return (target !== a) && target;
+            target = redirect(target, mode, exceptionRegex, samedomain) || target;
+            return (target !== address) && target;
         }
         return false;
     }
-    function differentdomains(s, t) {
-        if (currentMode === MODE_BLACKLIST && !removeRedirectsToSameDomain) {
-            let sourcedomain = psl.getDomain(getHostname(s));
-            let targetdomain = psl.getDomain(getHostname(t));
+    function differentdomains(source, target, mode, samedomain) {
+        if (mode === MODE_BLACKLIST && !samedomain) {
+            let sourcedomain = psl.getDomain(getHostname(source));
+            let targetdomain = psl.getDomain(getHostname(target));
             return (sourcedomain !== targetdomain);
         } else {
             return true;
         }
 
         function getHostname(url) {
-            var a = document.createElement("a");
+            var a = document.createElement("A");
             a.href = url;
             return a.hostname;
         }
@@ -82,7 +82,7 @@ function maybeRedirect(address) {
 
 }
 
-function getCached(map, key, create) {
+function getCached(key, create, map) {
     let result = map[key];
     if (result === undefined) {
         result = create(key);
@@ -97,38 +97,81 @@ function forEachNode(nodelist, func) {
     }
 }
 
-function enableRemoving() {
-    let observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.type == "childList") {
-                forEachNode(mutation.addedNodes, maybefixurl)
-            } else {
-                maybefixurl(mutation.target);
-            }
-        })
-    });
-    let links = document.getElementsByTagName("a");
-    forEachNode(links, fixurl);
-    observer.observe(document, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeList: ["href"]
-    });
-    TRACKEDEVENTS.forEach((e) => document.addEventListener(e, eventoccured));
+function cachedRedirectWithRuleset(mode, exceptionlist, samedomain) {
+    let redirectCache = new Map();
+    let concreteRedirect = redirectWithRuleset(mode, exceptionlist, samedomain, redirectCache);
+    return immediateRedirect(concreteRedirect, redirectCache);
 
-    function eventoccured(e) {
-        maybefixurl(e.target);
+    function redirectWithRuleset(mode, exceptionlist, samedomain, cache) {
+        let exceptionRegex = new RegExp("(" + exceptionlist.join("|") + ")", "i");
+        function appliedRedirect(url) {
+            return redirect(url, mode, exceptionRegex, samedomain, cache);
+        }
+        return appliedRedirect;
     }
-    function maybefixurl(element) {
+    function immediateRedirect(redirect, cache) {
+        function cachedRedirect(url) {
+            return getCached(url, redirect, cache);
+        }
+        return cachedRedirect;
+    }
+}
+
+function manipulateDocument(doc, trackedevents, linkManipulator) {
+    let anchorManipulator = anchorManipulatorFromLinkManipulator(linkManipulator);
+    let elementManipulator = ifAnchorWithManipulator(anchorManipulator);
+    manipulateAllAnchors(doc, anchorManipulator);
+    startObserver(doc, mutationObserverWithHandler(elementManipulator));
+    trackedevents.forEach((e) => doc.addEventListener(e, eventListenerFromElementManipulator(elementManipulator)));
+
+    function anchorManipulatorFromLinkManipulator(linkManipulator) {
+        function appliedAnchorManipulator(anchor) {
+            let target = linkManipulator(anchor.href);
+            if (target) {
+                anchor.href = target;
+            }
+        }
+        return appliedAnchorManipulator;
+    }
+    function mutationObserverWithHandler(handler) {
+        let observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.type == "childList") {
+                    forEachNode(mutation.addedNodes, handler)
+                } else {
+                    handler(mutation.target);
+                }
+            })
+        });
+        return observer;
+    }
+    function ifAnchorWithManipulator(func) {
+        function appliedIfAnchor(element) {
+            return ifAnchor(element, func);
+        }
+        return appliedIfAnchor;
+    }
+    function ifAnchor(element, func) {
         if (element.tagName === "A") {
-            fixurl(element);
+            func(element);
         }
     }
-    function fixurl(anchor) {
-        let result = getCached(cachedRedirects, anchor.href, maybeRedirect);
-        if (result) {
-            anchor.href = result;
+    function eventListenerFromElementManipulator(func) {
+        function appliedEventListener(event) {
+            return func(event.target);
         }
+        return appliedEventListener;
+    }
+    function startObserver(doc, observer) {
+        observer.observe(doc, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeList: ["href"]
+        });
+    }
+    function manipulateAllAnchors(doc, anchorManipulator) {
+        let anchors = doc.getElementsByTagName("A");
+        forEachNode(anchors, anchorManipulator);
     }
 }
