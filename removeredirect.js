@@ -40,11 +40,8 @@ function initialize(){
 }
 
 
-function redirect(address, mode, exceptionRegex, samedomain, cache) {
+function redirect(address, mode, exceptionRegex, samedomain) {
     let target = getTarget(address, mode, exceptionRegex, samedomain);
-    if (cache) {
-        cache[target] = false;
-    }
     return allowed(address, mode, exceptionRegex) && differentdomains(address, target, mode, samedomain) && target;
 
     function allowed(url, mode, exceptionRegex) {
@@ -79,7 +76,14 @@ function redirect(address, mode, exceptionRegex, samedomain, cache) {
             return a.hostname;
         }
     }
+}
 
+function getConvergingCached(key, create, map) {
+    let result = getCached(key, create, map);
+    if (result) {
+        map[result] = false;
+    }
+    return result;
 }
 
 function getCached(key, create, map) {
@@ -102,16 +106,16 @@ function cachedRedirectWithRuleset(mode, exceptionlist, samedomain) {
     let concreteRedirect = redirectWithRuleset(mode, exceptionlist, samedomain, redirectCache);
     return immediateRedirect(concreteRedirect, redirectCache);
 
-    function redirectWithRuleset(mode, exceptionlist, samedomain, cache) {
+    function redirectWithRuleset(mode, exceptionlist, samedomain) {
         let exceptionRegex = new RegExp("(" + exceptionlist.join("|") + ")", "i");
         function appliedRedirect(url) {
-            return redirect(url, mode, exceptionRegex, samedomain, cache);
+            return redirect(url, mode, exceptionRegex, samedomain);
         }
         return appliedRedirect;
     }
     function immediateRedirect(redirect, cache) {
         function cachedRedirect(url) {
-            return getCached(url, redirect, cache);
+            return getConvergingCached(url, redirect, cache);
         }
         return cachedRedirect;
     }
