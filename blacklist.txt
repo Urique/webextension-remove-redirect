@@ -1,0 +1,46 @@
+/abp
+/account
+/adfs
+/auth
+/cookie
+/download
+/login
+/logoff
+/logon
+/logout
+/oauth
+/preferences
+/profile
+/register
+/saml
+/signin
+/signoff
+/signon
+/signout
+/signup
+/sso
+/subscribe
+/verification
+web\.archive\.org
+(?!url)\?q=
+/share
+/submit
+stumbleupon\.com/badge
+t\.umblr\.com\/redirect			# See issue #6
+disq\.us/url\?url=					# See issue #6
+dnsstuff.com
+chart\.googleapis\.com/chart
+cred_submit
+/_login
+/adfs/ls
+rover\.ebay\.co
+/openid
+/translate
+microsofttranslator\.com
+phoronix\.com/scan\.php			# See issue #5
+/searchbyimage
+/Shibboleth.sso
+/Shibboleth-sso
+/wp-login
+/over18
+/nonceSigner
