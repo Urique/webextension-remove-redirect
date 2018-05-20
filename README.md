@@ -27,7 +27,7 @@ Known Limitations
  * This extension (or Skip Redirect for that matter) is not sufficient for preventing tracking via ping attributes or Javascript (as for example Google uses it).
  * If the webpage is loaded via a mechanism different from following normal links (for example, changing the current tab's location with JavaScript), redirections will still take place.
  * If the final destination of a link is changed after moving the mouse over it, the URL in the status bar will not update to reflect that. This is a limitation of Firefox.
- * For changed settings to apply, the page must be reloaded. This is a side effect of permanently changing the href attributes (needed for both efficiency, and being able to show final destinations in the status bar).
+ * For changed settings to apply, the page must be reloaded. This is a side effect of permanently changing the href attributes (needed for showing final destinations in the status bar).
  * Shortened links are currently not replaced, as they do not contain the destination in their URL.
  * There is no global blacklist for pages that don't work without redirects yet, you will have to add those exceptions yourself.
 
